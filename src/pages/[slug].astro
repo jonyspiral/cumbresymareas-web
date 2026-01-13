@@ -124,14 +124,17 @@ const schemaJSON = {
     </div>
   </div>
 
-          <a
-            href={entrada.data.whatsapp}
-            class="wsp-float"
-            onclick={`trackConversion('${entrada.slug}','float')`}
-          >
-            <span class="wsp-icon">💬</span>
-            <span>Consultar ahora</span>
-          </a>
+         <a
+        href={entrada.data.whatsapp}
+        class="wsp-float"
+        onclick={`
+          trackConversion('whatsapp_${entrada.slug}');
+          trackConversion('whatsapp_ui_float');
+        `}
+      >
+        <span class="wsp-icon">💬</span>
+        <span>Consultar ahora</span>
+      </a>
 </Layout>
 
 <style>
