@@ -1,6 +1,6 @@
 {
 	"main": "dist/_worker.js/index.js",
-	"name": "cumbresymareas-web",
+	"name": "cumbresymareas",
   "compatibility_date": "2026-01-13",
   "compatibility_flags": [
     "nodejs_compat",
