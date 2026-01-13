@@ -1,0 +1,5 @@
+﻿User-agent: *
+Allow: /
+
+# Indica la ruta al sitemap generado por Astro
+Sitemap: https://www.cumbresymareas.com.ar/sitemap-index.xml

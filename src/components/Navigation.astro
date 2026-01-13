@@ -1,0 +1,107 @@
+---
+// Navigation.astro
+---
+
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <img src="/logo_cumbres_solo_color.png" alt="Cumbres & Mareas" />
+    </a>
+
+    <div class="nav-links desktop-only">
+      <a href="/casanevada">Nevada</a>
+      <a href="/casawaikiki">Waikiki</a>
+      <a href="/#contacto" class="btn-contact">Contacto</a>
+    </div>
+
+    <button class="menu-toggle" id="menu-btn" aria-label="Abrir menú">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </div>
+
+  <div class="nav-mobile-drawer" id="mobile-menu">
+    <a href="/casanevada">Casa Nevada</a>
+    <a href="/casawaikiki">Casa Waikiki</a>
+    <a href="/#contacto" class="btn-contact-mobile">Contacto</a>
+  </div>
+</nav>
+
+<script>
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  menuBtn?.addEventListener('click', () => {
+    menuBtn.classList.toggle('active');
+    mobileMenu?.classList.toggle('active');
+    // Bloquear scroll del cuerpo cuando el menú está abierto
+    document.body.classList.toggle('no-scroll');
+  });
+
+  // Cerrar menú al hacer clic en un link
+  const navLinks = document.querySelectorAll('.nav-mobile-drawer a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      menuBtn?.classList.remove('active');
+      mobileMenu?.classList.remove('active');
+      document.body.classList.remove('no-scroll');
+    });
+  });
+</script>
+
+<style>
+  .navbar {
+    position: fixed;
+    top: 0; width: 100%; height: 80px;
+    background: white; z-index: 1000;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex; align-items: center;
+  }
+
+  .nav-container {
+    max-width: 1100px; width: 100%; margin: 0 auto;
+    padding: 0 20px; display: flex;
+    justify-content: space-between; align-items: center;
+  }
+
+  .nav-logo img { height: 40px; width: auto; }
+
+  /* Desktop */
+  .desktop-only { display: flex; gap: 30px; align-items: center; }
+  .desktop-only a { text-decoration: none; color: #1a1a1a; font-size: 0.9rem; text-transform: uppercase; }
+
+  /* Botón Hamburguesa */
+  .menu-toggle {
+    display: none; background: none; border: none; cursor: pointer; padding: 10px; z-index: 1100;
+  }
+  .bar {
+    display: block; width: 25px; height: 2px;
+    background: #1a1a1a; margin: 5px 0; transition: 0.4s;
+  }
+
+  /* Animación Hamburguesa a "X" */
+  .menu-toggle.active .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-toggle.active .bar:nth-child(2) { opacity: 0; }
+  .menu-toggle.active .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Drawer Mobile */
+  .nav-mobile-drawer {
+    position: fixed; top: 0; right: -100%;
+    width: 80%; height: 100vh;
+    background: white; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; gap: 30px;
+    transition: 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+    z-index: 1050;
+  }
+  .nav-mobile-drawer.active { right: 0; }
+  .nav-mobile-drawer a {
+    font-size: 1.5rem; text-decoration: none; color: #1a1a1a; font-family: 'Playfair Display', serif;
+  }
+
+  @media (max-width: 768px) {
+    .desktop-only { display: none; }
+    .menu-toggle { display: block; }
+  }
+</style>

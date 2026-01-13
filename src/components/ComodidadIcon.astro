@@ -1,0 +1,34 @@
+---
+// Un componente simple que recibe el nombre del icono y el texto
+const { label, icon } = Astro.props;
+
+// Diccionario de iconos simples (puedes reemplazarlos por SVGs luego)
+const icons = {
+  nieve: "❄️",
+  mar: "🌊",
+  calor: "🔥", // Para losa radiante
+  wifi: "📶",
+  gente: "👥",
+  cocina: "🍳",
+  baño: "🛁"
+};
+---
+<div class="comodidad-item">
+  <span class="icon">{icons[icon] || "•"}</span>
+  <span class="label">{label}</span>
+</div>
+
+<style>
+  .comodidad-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    color: #4a5568;
+    background: #f7fafc;
+    padding: 8px 12px;
+    border-radius: 6px;
+  }
+  .icon { font-size: 1.2rem; }
+  .label { font-weight: 500; }
+</style>

@@ -1,0 +1,60 @@
+﻿---
+import Layout from '../layouts/Layout.astro';
+import CardPropiedad from '../components/CardPropiedad.astro';
+
+import InstagramSocial from '../components/InstagramSocial.astro';
+// Importamos las fotos reales para el Home
+import imgNevada from '../assets/images/nevada/hero.jpg';
+import imgWaikiki from '../assets/images/waikiki/hero.jpg';
+---
+
+<Layout title="Cumbres & Mareas | Alquileres Premium">
+  <main class="home-container">
+    <header class="hero-home">
+      <p class="pre-title">Bienvenidos a</p>
+      <h1>Cumbres & Mareas</h1>
+      <p class="main-subtitle">Experiencias de alojamiento cuidadas. Espacios funcionales con vistas infinitas al Cerro Catedral y la costa atlántica.</p>
+    </header>
+
+    <section class="grid-propiedades">
+      <CardPropiedad
+        titulo="Casa Nevada"
+        subtitulo="Refugio de montaña en Cerro Catedral"
+        link="/casanevada"
+        imagen={imgNevada}
+      />
+      <CardPropiedad
+        titulo="Casa Waikiki"
+        subtitulo="Vistas al mar en Punta Canteras"
+        link="/casawaikiki"
+        imagen={imgWaikiki}
+      />
+    </section>
+<InstagramSocial />
+    <footer class="home-footer">
+      <p>Calidad sin excesos. Experiencias reales.</p>
+    </footer>
+  </main>
+</Layout>
+
+<style>
+  .home-container { max-width: 1200px; margin: 0 auto; padding: 80px 20px; }
+
+  .hero-home { text-align: center; margin-bottom: 80px; }
+  .pre-title { text-transform: uppercase; letter-spacing: 4px; font-size: 0.8rem; color: #888; }
+  h1 { font-family: serif; font-size: clamp(3rem, 8vw, 5rem); margin: 10px 0; color: #1a1a1a; }
+  .main-subtitle { font-size: 1.2rem; color: #666; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+  .grid-propiedades {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 40px;
+  }
+
+  .home-footer { text-align: center; margin-top: 100px; padding-top: 40px; border-top: 1px solid #eee; color: #aaa; font-size: 0.9rem; }
+
+  @media (max-width: 500px) {
+    .grid-propiedades { grid-template-columns: 1fr; }
+    .hero-home { margin-bottom: 40px; }
+  }
+</style>

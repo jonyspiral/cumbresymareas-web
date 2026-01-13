@@ -1,0 +1,30 @@
+---
+const { specs } = Astro.props; // Recibe un array de objetos { icon, label }
+---
+<div class="specs-grid">
+  {specs.map((spec) => (
+    <div class="spec-item">
+      <span class="spec-icon">{spec.icon}</span>
+      <span class="spec-label">{spec.label}</span>
+    </div>
+  ))}
+</div>
+
+<style>
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .spec-item {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 4px;
+    border-bottom: 2px solid #eee;
+  }
+  .spec-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .spec-label { font-size: 0.85rem; font-weight: 500; color: #333; line-height: 1.2; }
+</style>

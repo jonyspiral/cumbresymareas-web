@@ -1,0 +1,190 @@
+﻿---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PropertyGallery from '../components/PropertyGallery.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+
+export async function getStaticPaths() {
+  const entradas = await getCollection('propiedades');
+  return entradas.map(entrada => ({
+    params: { slug: entrada.slug }, props: { entrada },
+  }));
+}
+
+const { entrada } = Astro.props;
+const isNevada = entrada.slug === 'casanevada';
+
+// 1. CARGA Y ORDENAMIENTO DE IMÁGENES (01_ es prioridad)
+const todasLasImagenes = import.meta.glob('../assets/images/**/*.{jpg,jpeg,png,webp}', { eager: true });
+const rutaCarpeta = isNevada ? 'nevada' : 'waikiki';
+
+const fotosPropiedad = Object.keys(todasLasImagenes)
+  .filter(path => path.includes(`/images/${rutaCarpeta}/`))
+  .sort((a, b) => {
+    const nameA = a.split('/').pop() || "";
+    const nameB = b.split('/').pop() || "";
+    return nameA.localeCompare(nameB, undefined, { numeric: true, sensitivity: 'base' });
+  })
+  .map(path => {
+    const modulo = todasLasImagenes[path] as any;
+    return modulo.default || modulo;
+  });
+
+const heroImage = fotosPropiedad[0];
+const galeriaSecundaria = fotosPropiedad.slice(1);
+
+// 2. LÓGICA DE SPECS DINÁMICAS (Agrupación por categoría)
+// Tomamos los datos del esquema que acabas de actualizar
+const serviciosRaw = entrada.data.specs_dinamicas || [];
+const serviciosPorCategoria = serviciosRaw.reduce((acc, item) => {
+  const categoria = item.cat || 'General';
+  if (!acc[categoria]) acc[categoria] = [];
+  acc[categoria].push(item);
+  return acc;
+}, {});
+
+const schemaJSON = {
+  "@context": "https://schema.org",
+  "@type": "LodgingBusiness",
+  "name": entrada.data.title,
+  "description": entrada.data.subtitulo,
+  "url": `https://www.cumbresymareas.com.ar/${entrada.slug}`,
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": entrada.data.ubicacion,
+    "addressCountry": "AR"
+  }
+};
+---
+
+<Layout title={entrada.data.meta_title || entrada.data.title}
+  description={entrada.data.meta_description || entrada.data.subtitulo}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaJSON)} />
+
+  <div class="container">
+    <header class="property-header">
+      <h1>{entrada.data.title}</h1>
+      <p class="tagline">{entrada.data.subtitulo}</p>
+    </header>
+
+    <PropertyGallery heroImage={heroImage} galeriaSecundaria={galeriaSecundaria} />
+
+    <div class="main-grid">
+      <section>
+        <div class="experience-text">
+          <h2>Experiencia {isNevada ? 'Montaña' : 'Mar'}</h2>
+          <p>{entrada.data.description || "Cargando detalles de la propiedad..."}</p>
+        </div>
+
+        {entrada.data.videoUrl && (
+          <VideoPlayer videoUrl={entrada.data.videoUrl} title={entrada.data.title} />
+        )}
+
+        <div class="specs-section">
+          <h3 class="specs-title">Servicios y Equipamiento</h3>
+
+          {serviciosRaw.length > 0 ? (
+            <div class="specs-categories-grid">
+              {Object.keys(serviciosPorCategoria).map(cat => (
+                <div class="spec-group">
+                  <h4>{cat}</h4>
+                  <ul>
+                    {serviciosPorCategoria[cat].map(item => (
+                      <li>
+                        <span class="s-icon">{item.icon}</span>
+                        <span class="s-label">{item.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p class="no-specs">Las especificaciones se están actualizando.</p>
+          )}
+        </div>
+      </section>
+
+      <aside>
+        <div class="booking-sticky">
+          <h3>Reserva Directa</h3>
+          <p>Consultá disponibilidad y obtené la mejor tarifa sin comisiones intermedias.</p>
+         <a
+            href={entrada.data.whatsapp}
+            class="btn-wsp"
+            onclick={`trackConversion('${entrada.slug}','button')`}
+          >
+            Consultar por WhatsApp
+          </a>
+          <a href={entrada.data.airbnb} target="_blank" class="btn-airbnb">
+            Ver disponibilidad en Airbnb
+          </a>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+          <a
+            href={entrada.data.whatsapp}
+            class="wsp-float"
+            onclick={`trackConversion('${entrada.slug}','float')`}
+          >
+            <span class="wsp-icon">💬</span>
+            <span>Consultar ahora</span>
+          </a>
+</Layout>
+
+<style>
+  .container { max-width: 1100px; margin: 0 auto; padding: 120px 20px 60px; }
+  .property-header { margin-bottom: 30px; }
+  h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin: 0; color: #1a1a1a; line-height: 1.1; }
+  .tagline { font-family: 'Inter', sans-serif; color: #666; font-style: italic; font-size: 1.2rem; margin-top: 10px; }
+
+  .main-grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 60px; margin-top: 40px; }
+  .experience-text p { font-family: 'Inter', sans-serif; font-size: 1.1rem; line-height: 1.7; color: #444; white-space: pre-line; }
+
+  /* ESTILOS SERVICIOS DINÁMICOS */
+  .specs-section { margin-top: 60px; padding-top: 40px; border-top: 1px solid #eee; }
+  .specs-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 30px; }
+
+  .specs-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 40px;
+  }
+
+  .spec-group h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #999;
+    border-bottom: 1px solid #f5f5f5;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+  }
+
+  .spec-group ul { list-style: none; padding: 0; }
+  .spec-group li { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 0.95rem; color: #444; font-family: 'Inter', sans-serif; }
+  .s-icon { font-size: 1.1rem; }
+
+  .booking-sticky { position: sticky; top: 120px; padding: 35px; border: 1px solid #eee; border-radius: 15px; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+  .btn-wsp { display: block; background: #1a1a1a; color: white; text-align: center; padding: 18px; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 25px; transition: 0.3s; }
+  .btn-wsp:hover { background: #333; transform: translateY(-2px); }
+  .btn-airbnb { display: block; text-align: center; color: #888; font-size: 0.9rem; margin-top: 15px; text-decoration: underline; }
+
+  .wsp-float { display: none; }
+
+  @media (max-width: 768px) {
+    .container { padding: 80px 15px 40px; }
+    h1 { font-size: 2.2rem; }
+    .main-grid { grid-template-columns: 1fr; gap: 40px; }
+    .specs-categories-grid { grid-template-columns: 1fr; gap: 30px; }
+    .wsp-float {
+      display: flex; position: fixed; bottom: 25px; right: 20px; background: #25D366;
+      color: white; padding: 12px 25px; border-radius: 50px; z-index: 1000;
+      align-items: center; gap: 10px; font-weight: 600; text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+  }
+</style>

@@ -1,0 +1,52 @@
+﻿---
+const { titulo, subtitulo, link, imagen } = Astro.props;
+---
+<a href={link} class="card-link">
+  <div class="card" style={`background-image: url(${imagen.src})`}>
+    <div class="overlay">
+      <div class="content">
+        <span class="brand-tag">Explorar</span>
+        <h3>{titulo}</h3>
+        <p>{subtitulo}</p>
+      </div>
+    </div>
+  </div>
+</a>
+
+<style>
+  .card-link { text-decoration: none; display: block; }
+  .card {
+    height: 450px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+  .card:hover { transform: translateY(-8px); }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%);
+    display: flex;
+    align-items: flex-end;
+    padding: 30px;
+  }
+
+  .content { color: white; }
+  .brand-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.8;
+    margin-bottom: 8px;
+    display: block;
+  }
+  h3 { font-family: serif; font-size: 2rem; margin: 0; }
+  p { font-size: 1rem; opacity: 0.9; margin: 5px 0 0; font-style: italic; }
+
+  @media (max-width: 600px) { .card { height: 350px; } }
+</style>

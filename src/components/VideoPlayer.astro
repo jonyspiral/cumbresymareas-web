@@ -1,0 +1,90 @@
+---
+// src/components/VideoPlayer.astro
+interface Props {
+  videoUrl: string;
+  title: string;
+}
+
+const { videoUrl, title } = Astro.props;
+
+/**
+ * Función mejorada para extraer ID de YouTube
+ * Soporta: watch?v=, .be/, /embed/, y /shorts/
+ */
+const getYoutubeId = (url: string) => {
+    if (!url) return null;
+
+    // Regex ultra-completo para todas las variantes de YouTube incluyendo Shorts
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?)|(shorts\/)|(\?v=)|(&v=))([^#&?]*).*/;
+    const match = url.match(regExp);
+
+    // El ID siempre tiene 11 caracteres
+    const id = (match && match[10].length === 11) ? match[10] : null;
+    return id;
+};
+
+const videoId = getYoutubeId(videoUrl);
+---
+
+{videoId ? (
+  <div class="video-section">
+    <h3 class="section-title-inter">Recorrido Exclusivo</h3>
+    <div class="video-container">
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1`}
+        title={`Video tour de ${title}`}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+  </div>
+) : (
+  <div class="video-error">
+    <p>⚠️ No se pudo procesar el video. URL detectada: {videoUrl}</p>
+  </div>
+)}
+
+<style>
+  .video-section {
+    margin: 40px 0;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+  }
+
+  .section-title-inter {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+  }
+
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* Mantener 16:9 incluso para Shorts */
+    height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .video-error {
+    padding: 20px;
+    background: #fff5f5;
+    border: 1px solid #feb2b2;
+    border-radius: 8px;
+    color: #c53030;
+    font-size: 0.9rem;
+  }
+</style>

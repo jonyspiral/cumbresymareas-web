@@ -1,0 +1,25 @@
+﻿---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Contacto" description="Contactanos por Casa Nevada o Casa Waikiki">
+  <section style="text-align: center; padding: 40px 20px;">
+    <h1>Contacto Directo</h1>
+    <p>Seleccioná la propiedad por la que querés consultar para recibir atención personalizada:</p>
+
+    <div style="display: flex; flex-direction: column; gap: 20px; max-width: 400px; margin: 40px auto;">
+
+      <a href="https://wa.me/541140565638?text=Hola!%20Consulto%20por%20Casa%20Nevada"
+         onclick="window.trackConversion('whatsapp_casanevada')"
+         style="background: #2d3748; color: white; padding: 20px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+         Consultar por CASA NEVADA (Montaña)
+      </a>
+
+      <a href="https://wa.me/541140565638?text=Hola!%20Consulto%20por%20Casa%20Waikiki"
+         onclick="window.trackConversion('whatsapp_casawaikiki')"
+         style="background: #2b6cb0; color: white; padding: 20px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+         Consultar por CASA WAIKIKI (Mar)
+      </a>
+
+    </div>
+  </section>
+</Layout>

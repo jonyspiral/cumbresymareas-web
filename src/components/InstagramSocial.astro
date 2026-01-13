@@ -1,0 +1,149 @@
+---
+import { Image } from 'astro:assets';
+
+// Importación manual de las 4 mejores piezas de contenido
+import post1 from '../assets/images/instagram/nevada-interior.jpg';
+import post2 from '../assets/images/instagram/waikiki-amanecer.jpg';
+import post3 from '../assets/images/instagram/detalle-confort.jpg';
+import post4 from '../assets/images/instagram/experiencia-invierno.jpg';
+
+const feeds = [
+  { img: post1, url: "https://instagram.com/p/DLGk5y1sQSr", alt: "Calidez en Casa Nevada" },
+  { img: post2, url: "https://instagram.com/p/DRLJgQrAftK", alt: "Vistas desde Casa Waikiki" },
+  { img: post3, url: "https://instagram.com/p/DOE0eXyAZK6", alt: "Detalles premium" },
+  { img: post4, url: "https://instagram.com/p/DNqnGzBt51l", alt: "Momentos Cumbres y Mareas" },
+];
+---
+
+<section class="social-block">
+  <div class="container">
+    <h2 class="social-title">Vida real en Cumbres & Mareas</h2>
+
+    <div class="instagram-grid">
+      {feeds.map(post => (
+        <a href={post.url} target="_blank" rel="noopener noreferrer" class="insta-card">
+          <Image
+            src={post.img}
+            alt={post.alt}
+            width={400}
+            height={400}
+            class="insta-img"
+            loading="lazy"
+          />
+          <div class="insta-overlay">
+            <span class="view-label">Ver en Instagram</span>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="social-footer">
+      <a href="https://instagram.com/cumbresymareas.arg" target="_blank" class="btn-secondary">
+        Ver más en Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .social-block {
+    padding: 100px 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .social-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: #1a1a1a;
+    margin-bottom: 50px;
+    font-weight: 700;
+  }
+
+  .instagram-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 50px;
+  }
+
+  .insta-card {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: #f9f9f9;
+  }
+
+  .insta-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .insta-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .view-label {
+    color: #fff;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border: 1px solid rgba(255,255,255,0.8);
+    padding: 8px 16px;
+  }
+
+  /* Hovers */
+  .insta-card:hover .insta-img {
+    transform: scale(1.05);
+  }
+  .insta-card:hover .insta-overlay {
+    opacity: 1;
+  }
+
+  /* CTA Secundario */
+  .btn-secondary {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #666;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #ccc;
+    transition: all 0.3s ease;
+  }
+
+  .btn-secondary:hover {
+    color: #1a1a1a;
+    border-color: #1a1a1a;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .social-block { padding: 60px 15px; }
+    .social-title { font-size: 1.8rem; margin-bottom: 35px; }
+    .instagram-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .view-label { font-size: 0.65rem; }
+  }
+</style>

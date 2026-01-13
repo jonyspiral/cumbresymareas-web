@@ -1,0 +1,16 @@
+{
+  "name": "cumbresymareas-web",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.6.1",
+    "astro": "^5.16.8",
+    "photoswipe": "^5.4.4"
+  }
+}
